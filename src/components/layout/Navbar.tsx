@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { NavbarActions } from "./NavbarActions"
+import { MobileMenu } from "./MobileMenu"
 
 export function Navbar() {
 
@@ -20,7 +21,10 @@ export function Navbar() {
         </div>
 
         {/* Actions */}
-        <NavbarActions />
+        <div className="flex items-center gap-2">
+          <MobileMenu />
+          <NavbarActions />
+        </div>
       </div>
     </nav>
   )
