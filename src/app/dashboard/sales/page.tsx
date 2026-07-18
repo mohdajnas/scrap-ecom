@@ -4,6 +4,8 @@ import { PriceTag } from "@/components/shared/PriceTag"
 import Link from "next/link"
 import { SellerOrderStatusForm } from "./SellerOrderStatusForm"
 
+import { DownloadCsvButton } from "./DownloadCsvButton"
+
 export const revalidate = 0
 
 export default async function DashboardSalesPage() {
@@ -57,7 +59,10 @@ export default async function DashboardSalesPage() {
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-12">
-      <h1 className="text-3xl font-bold text-ink mb-8">My Sales</h1>
+      <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <h1 className="text-3xl font-bold text-ink">My Sales</h1>
+        {mySales.length > 0 && <DownloadCsvButton sales={mySales} />}
+      </div>
 
       {mySales.length === 0 ? (
         <div className="rounded-3xl bg-surface-alt py-20 text-center">
