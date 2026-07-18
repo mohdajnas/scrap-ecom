@@ -58,7 +58,7 @@ export function ProductCard({ id, title, price, imageUrl, condition, rating = 0,
         
         <div className="mt-4 mt-auto">
           {isOutOfStock ? (
-            <Button variant="secondary" className="w-full opacity-50" disabled>
+            <Button variant="outline" className="w-full opacity-50" disabled>
               Out of Stock
             </Button>
           ) : (

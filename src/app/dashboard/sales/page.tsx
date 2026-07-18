@@ -61,7 +61,7 @@ export default async function DashboardSalesPage() {
 
       {mySales.length === 0 ? (
         <div className="rounded-3xl bg-surface-alt py-20 text-center">
-          <p className="text-muted">You haven't received any orders yet.</p>
+          <p className="text-muted">You haven&apos;t received any orders yet.</p>
           <Link href="/dashboard/products/new" className="mt-4 inline-block font-semibold text-primary hover:underline">
             List a new product
           </Link>

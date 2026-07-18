@@ -126,7 +126,7 @@ export default async function ProductPage({ params }: { params: { id: string } }
           <div className="mt-auto pt-10">
             {product.stock_qty <= 0 ? (
               <div className="w-full">
-                <Button variant="secondary" size="lg" className="w-full opacity-50" disabled>
+                <Button variant="outline" size="lg" className="w-full opacity-50" disabled>
                   Out of Stock
                 </Button>
               </div>
