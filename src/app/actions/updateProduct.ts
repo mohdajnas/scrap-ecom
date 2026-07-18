@@ -37,7 +37,13 @@ export async function updateProductAction(
       images = [data.imageUrl]
     }
 
-    const { error: updateError } = await supabase
+    const { createClient: createAdminClient } = await import("@supabase/supabase-js")
+    const adminClient = createAdminClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    )
+
+    const { error: updateError } = await adminClient
       .from("products")
       .update({
         title: validatedData.title,
@@ -54,6 +60,7 @@ export async function updateProductAction(
       .eq('seller_id', user.id)
 
     if (updateError) {
+      console.error("Update failed:", updateError)
       return { error: updateError.message }
     }
 
