@@ -32,7 +32,8 @@ export default async function HomePage() {
     price: p.price,
     imageUrl: p.images?.[0] || "",
     condition: p.condition,
-    vehicle_make: p.vehicle_make
+    vehicle_make: p.vehicle_make,
+    stock_qty: p.stock_qty
   }))
 
   return (

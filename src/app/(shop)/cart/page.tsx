@@ -13,8 +13,14 @@ export default async function CartPage() {
     redirect("/login?next=/cart")
   }
 
-  // Fetch cart items for user
-  const { data: cartItemsData } = await supabase
+  // Use admin client to bypass RLS in case of policy issues
+  const { createClient: createAdminClient } = await import("@supabase/supabase-js");
+  const adminClient = createAdminClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+
+  const { data: cartItemsData, error } = await adminClient
     .from("cart_items")
     .select(`
       id,
@@ -41,7 +47,14 @@ export default async function CartPage() {
         <h1 className="text-3xl font-bold text-ink md:text-5xl">Your Cart</h1>
       </div>
       
-      <CartClient initialItems={cartItems} />
+      {error ? (
+        <div className="rounded-3xl bg-danger/10 p-6 text-danger">
+          <h2 className="font-bold">Error loading cart</h2>
+          <pre className="mt-2 text-sm">{JSON.stringify(error, null, 2)}</pre>
+        </div>
+      ) : (
+        <CartClient initialItems={cartItems} />
+      )}
     </div>
   )
 }

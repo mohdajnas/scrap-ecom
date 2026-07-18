@@ -47,10 +47,13 @@ export default async function DashboardOrdersPage() {
               <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border pb-4">
                 <div>
                   <p className="text-sm text-muted">Order ID: <span className="font-mono text-ink">{order.id}</span></p>
+                  {order.tracking_id && (
+                    <p className="text-sm text-muted">Tracking ID: <span className="font-mono font-bold text-primary">{order.tracking_id}</span></p>
+                  )}
                   <p className="text-sm text-muted">Placed on {new Date(order.created_at).toLocaleDateString()}</p>
                 </div>
-                <div className={`rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider ${getStatusColor(order.status)}`}>
-                  {order.status}
+                <div className="flex flex-col gap-1 items-end">
+                  <span className="text-xs font-semibold text-muted">Payment: {order.razorpay_order_id?.startsWith('COD') ? 'Cash on Delivery' : 'Online'}</span>
                 </div>
               </div>
 
@@ -59,7 +62,12 @@ export default async function DashboardOrdersPage() {
                   <div key={item.id} className="flex justify-between">
                     <div>
                       <p className="font-semibold text-ink">{item.products?.title || 'Unknown Product'}</p>
-                      <p className="text-sm text-muted">Qty: {item.quantity}</p>
+                      <div className="flex gap-4 mt-1 items-center">
+                        <p className="text-sm text-muted">Qty: {item.quantity}</p>
+                        <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${getStatusColor(item.status || order.status)}`}>
+                          {item.status || order.status}
+                        </span>
+                      </div>
                     </div>
                     <div className="font-semibold text-ink">
                       <PriceTag amount={item.price_at_time} />

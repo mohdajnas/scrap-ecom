@@ -112,6 +112,7 @@ export default async function CategoryPage({
                     imageUrl={product.images?.[0] || ""}
                     rating={product.avg_rating}
                     reviewsCount={product.review_count}
+                    stockQty={product.stock_qty}
                   />
               ))}
             </div>

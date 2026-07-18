@@ -4,53 +4,50 @@ import { paymentGateway } from '@/lib/payment-gateway'
 
 export async function POST(request: Request) {
   try {
-    const { clientReferenceId } = await request.json()
+    const payload = await request.json()
 
-    if (!clientReferenceId) {
-      return NextResponse.json({ error: 'Missing client reference ID' }, { status: 400 })
+    // 1. Verify Signature
+    if (!paymentGateway.verifyWebhookSignature(payload)) {
+      console.warn('Webhook signature verification failed:', payload)
+      return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
+    }
+
+    const { data } = payload
+    
+    // We only care if payment is successfully completed
+    if (data.transactionStatus !== 'Approved' && data.transactionStatus !== 'LateApproved') {
+      return NextResponse.json({ status: 'Ignored, not approved' }, { status: 200 })
     }
 
     const adminClient = createAdminClient()
 
-    // 1. Retrieve order to get the internal reference ID
+    // 2. Retrieve order using gateway client reference ID
     const { data: order, error: orderError } = await adminClient
       .from('orders')
-      .select('id, total_amount, status, buyer_id, gateway_internal_reference_id')
-      .eq('gateway_client_reference_id', clientReferenceId)
+      .select('id, total_amount, status, buyer_id')
+      .eq('gateway_client_reference_id', data.clientReferenceId)
       .single()
 
     if (orderError || !order) {
-      return NextResponse.json({ error: 'Order not found' }, { status: 404 })
+      console.error('Webhook: Order not found for reference', data.clientReferenceId)
+      // Return 200 anyway so gateway doesn't retry infinitely on a bad reference
+      return NextResponse.json({ error: 'Order not found' }, { status: 200 })
     }
     
     if (order.status === 'paid') {
-      return NextResponse.json({ success: true, orderId: order.id })
-    }
-
-    if (!order.gateway_internal_reference_id) {
-      return NextResponse.json({ error: 'Order missing gateway reference' }, { status: 400 })
-    }
-
-    // 2. Check status from Payment Gateway
-    const gatewayRes = await paymentGateway.checkStatus(order.gateway_internal_reference_id)
-
-    if (gatewayRes.status !== 'SUCCESS') {
-      return NextResponse.json({ error: 'Failed to retrieve payment status' }, { status: 400 })
-    }
-
-    const { data } = gatewayRes
-    
-    // We only care if payment is successfully completed
-    if (data.transactionStatus !== 'Approved' && data.transactionStatus !== 'LateApproved') {
-      return NextResponse.json({ success: false, status: data.transactionStatus })
+      return NextResponse.json({ message: 'Order already processed' }, { status: 200 })
     }
 
     // 3. Verify exactly matching amount
+    // The webhook payload's requestedAmount must match our DB total_amount exactly
     if (parseFloat(data.requestedAmount) !== order.total_amount) {
+      console.warn(`Webhook amount mismatch for order ${order.id}: expected ${order.total_amount}, got ${data.requestedAmount}`)
       return NextResponse.json({ error: 'Payment amount mismatch' }, { status: 400 })
     }
 
     // 4. Update database (Orders, Cart Items, Products) securely via Admin Client
+    
+    // Fetch cart items to snapshot
     const { data: cartItems } = await adminClient
       .from('cart_items')
       .select('product_id, quantity, products(price, title, seller_id)')
@@ -62,20 +59,13 @@ export async function POST(request: Request) {
         return {
           order_id: order.id,
           product_id: item.product_id,
-          seller_id: prod.seller_id,
-          title_snapshot: prod.title,
-          price_snapshot: prod.price,
           price_at_time: prod.price,
           quantity: item.quantity,
-          status: 'placed'
         }
       })
       
       // Insert order items
-      const { error: insertError } = await adminClient.from('order_items').insert(orderItems)
-      if (insertError) {
-        console.error('Failed to insert order items in verify:', insertError)
-      }
+      await adminClient.from('order_items').insert(orderItems)
       
       // Decrement stock gracefully
       for (const item of cartItems) {
@@ -85,10 +75,10 @@ export async function POST(request: Request) {
           .eq('id', item.product_id)
           .single()
           
-        if (currentProd) {
+        if (currentProd && currentProd.stock_qty >= item.quantity) {
           await adminClient
             .from('products')
-            .update({ stock_qty: Math.max(0, currentProd.stock_qty - item.quantity) })
+            .update({ stock_qty: currentProd.stock_qty - item.quantity })
             .eq('id', item.product_id)
         }
       }
@@ -105,9 +95,9 @@ export async function POST(request: Request) {
       })
       .eq('id', order.id)
 
-    return NextResponse.json({ success: true, orderId: order.id })
+    return NextResponse.json({ status: 'SUCCESS' }, { status: 200 })
   } catch (err: any) {
-    console.error('Verify Payment Error:', err)
+    console.error('Webhook Error:', err)
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
   }
 }

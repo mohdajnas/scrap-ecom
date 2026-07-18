@@ -40,24 +40,14 @@ export default function SignupPage() {
       if (error) {
         toast.error(error.message)
       } else {
-        toast.success("Account created! Please check your email to verify.")
-        router.push("/login")
+        toast.success("Account created! You are now logged in.")
+        router.push("/dashboard/profile")
       }
     } catch (err) {
       toast.error("An unexpected error occurred.")
     } finally {
       setIsSubmitting(false)
     }
-  }
-
-  const handleGoogleLogin = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
-      },
-    })
-    if (error) toast.error(error.message)
   }
 
   return (
@@ -105,16 +95,6 @@ export default function SignupPage() {
           {isSubmitting ? "Creating account..." : "Sign up"}
         </Button>
       </form>
-
-      <div className="my-6 flex items-center">
-        <div className="flex-1 border-t border-border"></div>
-        <span className="mx-4 text-xs text-muted uppercase">Or</span>
-        <div className="flex-1 border-t border-border"></div>
-      </div>
-
-      <Button onClick={handleGoogleLogin} variant="outline" className="w-full">
-        Sign up with Google
-      </Button>
 
       <p className="mt-6 text-center text-sm text-muted">
         Already have an account?{" "}

@@ -109,6 +109,15 @@ export function NavbarActions() {
     }
   }, [supabase])
 
+  // Listen for optimistic local cart updates
+  useEffect(() => {
+    const handleCartUpdated = () => {
+      setCartItemCount((prev) => prev + 1)
+    }
+    window.addEventListener("cartUpdated", handleCartUpdated)
+    return () => window.removeEventListener("cartUpdated", handleCartUpdated)
+  }, [])
+
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (searchQuery.trim()) {

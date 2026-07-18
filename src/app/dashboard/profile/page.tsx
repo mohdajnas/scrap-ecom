@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
-import { User, Mail, Shield, Calendar } from "lucide-react"
-
+import { User, Mail, Shield, Calendar, ShoppingCart, Package } from "lucide-react"
+import Link from "next/link"
 export const revalidate = 0
 
 export default async function ProfilePage() {
@@ -59,6 +59,23 @@ export default async function ProfilePage() {
               <Calendar className="h-4 w-4" />
               <span>Joined {joinedDate}</span>
             </div>
+          </div>
+          <div className="mt-8 flex flex-col gap-3 border-t border-border pt-6">
+            <h3 className="text-sm font-semibold text-ink uppercase tracking-wider mb-2">Quick Links</h3>
+            <Link 
+              href="/dashboard/orders" 
+              className="flex items-center gap-3 rounded-xl bg-surface-alt p-3 text-sm font-medium text-ink transition-colors hover:bg-primary/10 hover:text-primary"
+            >
+              <ShoppingCart className="h-5 w-5" />
+              My Orders
+            </Link>
+            <Link 
+              href="/dashboard/products" 
+              className="flex items-center gap-3 rounded-xl bg-surface-alt p-3 text-sm font-medium text-ink transition-colors hover:bg-primary/10 hover:text-primary"
+            >
+              <Package className="h-5 w-5" />
+              My Products
+            </Link>
           </div>
         </div>
 

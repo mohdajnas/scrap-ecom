@@ -47,16 +47,6 @@ function LoginContent() {
     }
   }
 
-  const handleGoogleLogin = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
-      },
-    })
-    if (error) toast.error(error.message)
-  }
-
   return (
     <div className="w-full max-w-md rounded-2xl bg-surface p-8 shadow-soft">
       <div className="mb-8 text-center">
@@ -91,16 +81,6 @@ function LoginContent() {
           {isSubmitting ? "Logging in..." : "Log in"}
         </Button>
       </form>
-
-      <div className="my-6 flex items-center">
-        <div className="flex-1 border-t border-border"></div>
-        <span className="mx-4 text-xs text-muted uppercase">Or</span>
-        <div className="flex-1 border-t border-border"></div>
-      </div>
-
-      <Button onClick={handleGoogleLogin} variant="outline" className="w-full">
-        Continue with Google
-      </Button>
 
       <p className="mt-6 text-center text-sm text-muted">
         Don&apos;t have an account?{" "}

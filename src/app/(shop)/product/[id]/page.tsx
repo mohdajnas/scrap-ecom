@@ -124,14 +124,22 @@ export default async function ProductPage({ params }: { params: { id: string } }
           </div>
 
           <div className="mt-auto pt-10">
-            <div className="flex gap-4">
-              <div className="flex-1">
-                <AddToCartButton productId={product.id} />
+            {product.stock_qty <= 0 ? (
+              <div className="w-full">
+                <Button variant="secondary" size="lg" className="w-full opacity-50" disabled>
+                  Out of Stock
+                </Button>
               </div>
-              <div className="flex-1">
-                <Button variant="outline" size="lg" className="w-full bg-white">Buy Now</Button>
+            ) : (
+              <div className="flex gap-4">
+                <div className="flex-1">
+                  <AddToCartButton productId={product.id} />
+                </div>
+                <div className="flex-1">
+                  <Button variant="outline" size="lg" className="w-full bg-white">Buy Now</Button>
+                </div>
               </div>
-            </div>
+            )}
             <p className="mt-4 flex items-center justify-center gap-2 text-sm text-muted">
               <ShieldCheck className="h-4 w-4 text-success" />
               Patshell Buyer Protection Guarantee

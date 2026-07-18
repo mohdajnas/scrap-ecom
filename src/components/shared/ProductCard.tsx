@@ -13,9 +13,12 @@ interface ProductCardProps {
   condition: "new" | "used"
   rating?: number
   reviewsCount?: number
+  stockQty?: number
 }
 
-export function ProductCard({ id, title, price, imageUrl, condition, rating = 0, reviewsCount = 0 }: ProductCardProps) {
+export function ProductCard({ id, title, price, imageUrl, condition, rating = 0, reviewsCount = 0, stockQty = 1 }: ProductCardProps) {
+  const isOutOfStock = stockQty <= 0;
+
   return (
     <Link href={`/product/${id}`} className="group relative flex flex-col overflow-hidden rounded-2xl bg-surface shadow-soft transition-all hover:-translate-y-1 hover:shadow-lg">
       <div className="relative aspect-square overflow-hidden bg-surface-alt">
@@ -34,6 +37,11 @@ export function ProductCard({ id, title, price, imageUrl, condition, rating = 0,
         <div className="absolute left-3 top-3">
           <Badge status={condition} />
         </div>
+        {isOutOfStock && (
+          <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/40 backdrop-blur-[2px]">
+            <span className="rounded bg-danger px-3 py-1 text-sm font-bold tracking-wider text-white uppercase">Out of Stock</span>
+          </div>
+        )}
       </div>
       
       <div className="flex flex-1 flex-col p-4">
@@ -49,9 +57,15 @@ export function ProductCard({ id, title, price, imageUrl, condition, rating = 0,
         </div>
         
         <div className="mt-4 mt-auto">
-          <Button variant="primary" className="w-full opacity-100 transition-opacity md:opacity-0 md:group-hover:opacity-100">
-            + Buy
-          </Button>
+          {isOutOfStock ? (
+            <Button variant="secondary" className="w-full opacity-50" disabled>
+              Out of Stock
+            </Button>
+          ) : (
+            <Button variant="primary" className="w-full opacity-100 transition-opacity md:opacity-0 md:group-hover:opacity-100">
+              + Buy
+            </Button>
+          )}
         </div>
       </div>
     </Link>

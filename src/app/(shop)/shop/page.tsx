@@ -87,6 +87,7 @@ export default async function ShopPage({
                     condition={product.condition}
                     imageUrl={product.images?.[0] || ""}
                     rating={4.5}
+                    stockQty={product.stock_qty}
                   />
               ))}
             </div>

@@ -6,12 +6,17 @@ import { z } from "zod"
 
 export const createOrderSchema = z.object({
   shipping_address: z.object({
+    full_name: z.string().min(2),
+    phone_number: z.string().min(10),
+    apartment: z.string().optional(),
     street: z.string().min(5),
+    landmark: z.string().optional(),
     city: z.string().min(2),
     state: z.string().min(2),
     postal_code: z.string().min(4),
     country: z.string().default('India')
-  })
+  }),
+  payment_method: z.enum(['online', 'cod']).default('online')
 })
 
 export const verifyPaymentSchema = z.object({

@@ -12,6 +12,7 @@ interface ProductRow {
   imageUrl?: string // mapped from images[0]
   condition: "new" | "used"
   vehicle_make: string | null
+  stock_qty: number
 }
 
 interface HotPicksTabsProps {
@@ -62,6 +63,7 @@ export function HotPicksTabs({ initialProducts }: HotPicksTabsProps) {
               imageUrl={product.imageUrl || ""}
               rating={4.5} // Placeholder
               reviewsCount={12} // Placeholder
+              stockQty={product.stock_qty}
             />
           ))}
         </div>
