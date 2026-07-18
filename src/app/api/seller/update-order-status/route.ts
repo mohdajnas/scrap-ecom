@@ -39,11 +39,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Forbidden: You can only update your own items' }, { status: 403 })
     }
 
-    // Update the status
+    // Update the status on the order
     const { error: updateError } = await adminClient
-      .from('order_items')
+      .from('orders')
       .update({ status })
-      .eq('id', itemId)
+      .eq('id', orderItem.order_id)
 
     if (updateError) {
       console.error('Update error:', updateError)

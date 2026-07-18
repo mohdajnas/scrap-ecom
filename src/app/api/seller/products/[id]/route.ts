@@ -42,6 +42,24 @@ export async function DELETE(
       .eq('seller_id', user.id) // Extra safety
 
     if (deleteError) {
+      if (deleteError.code === '23503') {
+        // Soft delete: hide it from store (stock=0) and seller dashboard (rejection_reason='deleted_by_seller')
+        const { createClient: createAdminClient } = await import('@supabase/supabase-js')
+        const adminClient = createAdminClient(
+          process.env.NEXT_PUBLIC_SUPABASE_URL!,
+          process.env.SUPABASE_SERVICE_ROLE_KEY!
+        )
+        const { error: softDeleteError } = await adminClient
+          .from('products')
+          .update({ stock_qty: 0, rejection_reason: 'deleted_by_seller' })
+          .eq('id', id)
+        
+        if (softDeleteError) {
+          console.error('Failed to soft delete:', softDeleteError)
+          return NextResponse.json({ error: 'Failed to delete product' }, { status: 500 })
+        }
+        return NextResponse.json({ success: true, softDeleted: true })
+      }
       console.error('Failed to delete product:', deleteError)
       return NextResponse.json({ error: 'Failed to delete product' }, { status: 500 })
     }

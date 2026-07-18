@@ -147,7 +147,7 @@ export function SellScrapForm({ categories }: { categories: Category[] }) {
             {...register("stock_qty")}
             type="number"
             step="1"
-            min="1"
+            min="0"
             className="w-full rounded-lg border border-border px-4 py-2 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
             placeholder="1"
             defaultValue={1}

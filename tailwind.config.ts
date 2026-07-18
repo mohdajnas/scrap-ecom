@@ -9,7 +9,7 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"Myriad Pro"', 'Myriad', 'sans-serif'],
+        sans: ['var(--font-myriad-pro)', '"Myriad Pro"', 'Myriad', 'sans-serif'],
       },
       colors: {
         primary: {

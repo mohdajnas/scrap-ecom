@@ -23,6 +23,7 @@ export default async function HomePage() {
     .from("products")
     .select("*")
     .eq("status", "approved")
+    .gt("stock_qty", 0)
     .order("created_at", { ascending: false })
     .limit(12)
 

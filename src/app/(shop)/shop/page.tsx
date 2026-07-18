@@ -21,6 +21,7 @@ export default async function ShopPage({
   
   let query = supabase.from("products").select("*, categories(name, slug)")
     .eq("status", "approved")
+    .gt("stock_qty", 0)
 
   if (q) {
     query = query.or(`title.ilike.%${q}%,description.ilike.%${q}%`)

@@ -18,6 +18,7 @@ export default async function MyProductsPage() {
     .from("products")
     .select("*")
     .eq("seller_id", user.id)
+    .or("rejection_reason.is.null,rejection_reason.neq.deleted_by_seller")
     .order("created_at", { ascending: false })
 
   return (

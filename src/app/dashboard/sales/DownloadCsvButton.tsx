@@ -41,7 +41,7 @@ export function DownloadCsvButton({ sales }: { sales: any[] }) {
         item.quantity || 0,
         item.price_at_time || 0,
         (item.quantity || 0) * (item.price_at_time || 0),
-        item.status || "placed",
+        order.status || "placed",
         new Date(order.created_at || Date.now()).toLocaleDateString(),
         `"${(address.full_name || "").replace(/"/g, '""')}"`,
         address.phone_number || "",

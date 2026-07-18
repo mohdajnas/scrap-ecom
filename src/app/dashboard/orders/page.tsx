@@ -22,8 +22,11 @@ export default async function DashboardOrdersPage() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'paid': return 'bg-success/10 text-success'
-      case 'created': return 'bg-warning/10 text-warning'
+      case 'paid':
+      case 'delivered': return 'bg-success/10 text-success'
+      case 'created':
+      case 'placed': return 'bg-warning/10 text-warning'
+      case 'shipped': return 'bg-info/10 text-info'
       case 'cancelled': return 'bg-danger/10 text-danger'
       default: return 'bg-primary/10 text-primary'
     }

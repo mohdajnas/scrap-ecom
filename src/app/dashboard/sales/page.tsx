@@ -114,12 +114,12 @@ export default async function DashboardSalesPage() {
                     <div className="bg-surface-alt p-4 rounded-xl">
                       <div className="flex items-center gap-3 mb-4">
                         <span className="text-sm text-muted">Current Status:</span>
-                        <span className={`rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider ${getStatusColor(item.status)}`}>
-                          {item.status || 'placed'}
+                        <span className={`rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider ${getStatusColor(order.status)}`}>
+                          {order.status || 'placed'}
                         </span>
                       </div>
                       
-                      <SellerOrderStatusForm itemId={item.id} currentStatus={item.status || 'placed'} />
+                      <SellerOrderStatusForm itemId={item.id} currentStatus={order.status || 'placed'} />
                     </div>
                   </div>
                 </div>

@@ -37,7 +37,10 @@ export function ProductListClient({ products: initialProducts }: { products: Pro
     setIsDeleting(id)
     try {
       const res = await fetch(`/api/seller/products/${id}`, { method: 'DELETE' })
-      if (!res.ok) throw new Error("Failed to delete product")
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        throw new Error(data.error || "Failed to delete product")
+      }
       
       setProducts(prev => prev.filter(p => p.id !== id))
       toast.success("Product deleted successfully")
