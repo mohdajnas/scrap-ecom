@@ -30,7 +30,7 @@ export default async function DashboardSalesPage() {
     .select(`
       *,
       orders (
-        id, created_at, tracking_id, shipping_address
+        id, created_at, tracking_id, shipping_address, status
       ),
       products (
         id, title, seller_id
