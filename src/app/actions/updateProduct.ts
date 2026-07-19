@@ -53,8 +53,11 @@ export async function updateProductAction(
         category_id: validatedData.category_id,
         vehicle_make: validatedData.vehicle_make || null,
         vehicle_model: validatedData.vehicle_model || null,
-        stock_qty: validatedData.stock_qty,
+        stock_qty: validatedData.stock_qty || 1,
+        delivery_fee: validatedData.delivery_fee || 0,
+        extra_fees: validatedData.extra_fees || 0,
         images: images,
+        updated_at: new Date().toISOString()
       })
       .eq('id', productId)
       .eq('seller_id', user.id)

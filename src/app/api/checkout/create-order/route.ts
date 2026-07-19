@@ -36,7 +36,7 @@ export async function POST(request: Request) {
       .select(`
         quantity,
         product_id,
-        products ( price, stock_qty, title, seller_id )
+        products ( price, stock_qty, title, seller_id, delivery_fee, extra_fees )
       `)
       .eq('user_id', user.id)
 
@@ -53,7 +53,8 @@ export async function POST(request: Request) {
           error: `Not enough stock for ${product.title}. Only ${product.stock_qty} left.` 
         }, { status: 400 })
       }
-      totalAmount += product.price * item.quantity
+      const itemPrice = product.price + (product.delivery_fee || 0) + (product.extra_fees || 0)
+      totalAmount += itemPrice * item.quantity
     }
 
     if (totalAmount <= 0) {

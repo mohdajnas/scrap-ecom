@@ -83,6 +83,8 @@ CREATE TABLE products (
   vehicle_make TEXT,
   vehicle_model TEXT,
   stock_qty INTEGER DEFAULT 1 NOT NULL,
+  delivery_fee DECIMAL(10, 2) DEFAULT 0 NOT NULL,
+  extra_fees DECIMAL(10, 2) DEFAULT 0 NOT NULL,
   status product_status DEFAULT 'pending'::product_status NOT NULL,
   rejection_reason TEXT,
   images TEXT[] DEFAULT '{}'::TEXT[] NOT NULL,

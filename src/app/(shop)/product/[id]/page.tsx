@@ -94,6 +94,13 @@ export default async function ProductPage({ params }: { params: { id: string } }
           <div className="mt-4 text-3xl text-primary">
             <PriceTag amount={product.price} />
           </div>
+          
+          {(product.delivery_fee > 0 || product.extra_fees > 0) && (
+            <div className="mt-2 text-sm text-muted flex flex-col gap-1">
+              {product.delivery_fee > 0 && <span>+ <PriceTag amount={product.delivery_fee} /> Delivery Fee</span>}
+              {product.extra_fees > 0 && <span>+ <PriceTag amount={product.extra_fees} /> Platform/Extra Fee</span>}
+            </div>
+          )}
 
           <div className="mt-8 rounded-2xl bg-surface-alt p-6">
             <h3 className="font-semibold text-ink">Seller Information</h3>

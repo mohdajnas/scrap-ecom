@@ -33,6 +33,8 @@ export async function submitProductAction(data: any) {
       vehicle_make: data.vehicle_make || null,
       vehicle_model: data.vehicle_model || null,
       stock_qty: data.stock_qty || 1,
+      delivery_fee: data.delivery_fee || 0,
+      extra_fees: data.extra_fees || 0,
       images: data.imageUrl ? [data.imageUrl] : [],
       status: "approved"
     }).select().single()

@@ -17,6 +17,8 @@ type CartItemType = {
     id: string
     title: string
     price: number
+    delivery_fee: number
+    extra_fees: number
     images: string[]
   }
 }
@@ -27,6 +29,9 @@ export function CartClient({ initialItems }: { initialItems: CartItemType[] }) {
   const router = useRouter()
 
   const subtotal = items.reduce((acc, item) => acc + (item.product.price * item.quantity), 0)
+  const totalDeliveryFee = items.reduce((acc, item) => acc + ((item.product.delivery_fee || 0) * item.quantity), 0)
+  const totalExtraFees = items.reduce((acc, item) => acc + ((item.product.extra_fees || 0) * item.quantity), 0)
+  const grandTotal = subtotal + totalDeliveryFee + totalExtraFees
 
   const updateQuantity = async (cartItemId: string, newQuantity: number) => {
     if (newQuantity < 1) return
@@ -133,13 +138,21 @@ export function CartClient({ initialItems }: { initialItems: CartItemType[] }) {
               <span>Subtotal</span>
               <span className="font-medium text-ink"><PriceTag amount={subtotal} /></span>
             </div>
-            <div className="flex justify-between text-muted">
-              <span>Shipping</span>
-              <span className="font-medium text-ink">Calculated at checkout</span>
-            </div>
+            {totalDeliveryFee > 0 && (
+              <div className="flex justify-between text-muted">
+                <span>Delivery Fee</span>
+                <span className="font-medium text-ink"><PriceTag amount={totalDeliveryFee} /></span>
+              </div>
+            )}
+            {totalExtraFees > 0 && (
+              <div className="flex justify-between text-muted">
+                <span>Platform/Extra Fees</span>
+                <span className="font-medium text-ink"><PriceTag amount={totalExtraFees} /></span>
+              </div>
+            )}
             <div className="flex justify-between border-t border-border pt-4 text-base font-bold text-ink">
               <span>Total</span>
-              <span className="text-primary"><PriceTag amount={subtotal} /></span>
+              <span className="text-primary"><PriceTag amount={grandTotal} /></span>
             </div>
           </div>
 

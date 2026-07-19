@@ -11,6 +11,8 @@ export const sellScrapSchema = z.object({
   vehicle_make: z.string().optional(),
   vehicle_model: z.string().optional(),
   stock_qty: z.coerce.number().int().min(0, "Stock must be at least 0").default(1),
+  delivery_fee: z.coerce.number().min(0).default(0),
+  extra_fees: z.coerce.number().min(0).default(0),
 })
 
 export type SellScrapInput = z.infer<typeof sellScrapSchema>

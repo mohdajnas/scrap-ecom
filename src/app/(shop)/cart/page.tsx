@@ -29,6 +29,8 @@ export default async function CartPage() {
         id,
         title,
         price,
+        delivery_fee,
+        extra_fees,
         images
       )
     `)

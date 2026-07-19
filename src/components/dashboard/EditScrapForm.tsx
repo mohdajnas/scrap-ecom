@@ -43,6 +43,8 @@ export function EditScrapForm({
       vehicle_make: initialData.vehicle_make || "",
       vehicle_model: initialData.vehicle_model || "",
       stock_qty: initialData.stock_qty || 1,
+      delivery_fee: initialData.delivery_fee || 0,
+      extra_fees: initialData.extra_fees || 0,
     }
   })
 
@@ -144,16 +146,44 @@ export function EditScrapForm({
         </div>
 
         {/* Price */}
-        <div>
-          <label className="mb-1 block text-sm font-medium text-ink">Price (₹)</label>
-          <input
-            {...register("price")}
-            type="number"
-            step="0.01"
-            className="w-full rounded-lg border border-border px-4 py-2 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-            placeholder="0.00"
-          />
-          {errors.price && <p className="mt-1 text-xs text-danger">{errors.price.message}</p>}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 col-span-2 md:col-span-1">
+          <div>
+            <label className="mb-1 block text-sm font-medium text-ink">Price (₹)</label>
+            <input
+              {...register("price")}
+              type="number"
+              step="0.01"
+              className="w-full rounded-lg border border-border px-4 py-2 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+              placeholder="0.00"
+            />
+            {errors.price && <p className="mt-1 text-xs text-danger">{errors.price.message}</p>}
+          </div>
+
+          <div>
+            <label className="mb-1 block text-sm font-medium text-ink">Delivery Fee (₹)</label>
+            <input
+              {...register("delivery_fee")}
+              type="number"
+              step="0.01"
+              className="w-full rounded-lg border border-border px-4 py-2 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+              placeholder="0.00"
+              defaultValue={0}
+            />
+            {errors.delivery_fee && <p className="mt-1 text-xs text-danger">{errors.delivery_fee.message}</p>}
+          </div>
+
+          <div>
+            <label className="mb-1 block text-sm font-medium text-ink">Platform/Extra Fees (₹)</label>
+            <input
+              {...register("extra_fees")}
+              type="number"
+              step="0.01"
+              className="w-full rounded-lg border border-border px-4 py-2 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+              placeholder="0.00"
+              defaultValue={0}
+            />
+            {errors.extra_fees && <p className="mt-1 text-xs text-danger">{errors.extra_fees.message}</p>}
+          </div>
         </div>
 
         {/* Stock Quantity */}
